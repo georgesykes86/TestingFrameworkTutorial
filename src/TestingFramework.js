@@ -18,11 +18,32 @@ const assertions = {
   },
 
   assertThrow(expectedMessage, action) {
+    let hasThrown = false;
+
     try {
       action();
     } catch (error) {
+      hasThrown = true;
       this.assertEqual(expectedMessage, error.message);
     }
+
+    this.assertTrue(hasThrown, 'Expected to throw an error but nothing was thrown');
+  },
+
+  spy() {
+    function that() {
+      that.called = true;
+    };
+
+    that.assertNotCalled = function () {
+      assertions.assertTrue(!that.called, 'Expected not to be called');
+    };
+
+    that.assertCalled = function () {
+      assertions.assertTrue(that.called, 'Expected to be called');
+    };
+
+    return that;
   },
 };
 
