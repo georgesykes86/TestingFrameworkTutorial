@@ -1,7 +1,27 @@
 const assertions = {
   assertTrue(condition, message) {
+    let errorMessage = 'Expected to be true, but got false';
+
+    if (message) {
+      errorMessage = message;
+    }
     if (!condition) {
-      throw new Error(message || 'Expected to be true, but got false');
+      throw new Error(errorMessage);
+    }
+  },
+
+  assertEqual(expected, actual) {
+    this.assertTrue(
+      expected === actual,
+      `Expected to equal ${expected}, but got ${actual}`,
+    );
+  },
+
+  assertThrow(expectedMessage, action) {
+    try {
+      action();
+    } catch (error) {
+      this.assertEqual(expectedMessage, error.message);
     }
   },
 };
