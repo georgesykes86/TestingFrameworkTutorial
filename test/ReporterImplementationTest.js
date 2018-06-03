@@ -10,6 +10,9 @@ const IMPLEMENTATIONS = [
 
 IMPLEMENTATIONS.forEach((ReporterImplementation) => {
   runTestSuite(function (t) {
+    this.getTestSuiteName = () => {
+      return ReporterImplementation.name + '_ReportTest';
+    }
     let reporter = new ReporterImplementation();
 
     this.testDefines_reportTestSuite = () => {

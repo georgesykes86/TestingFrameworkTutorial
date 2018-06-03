@@ -68,3 +68,20 @@ runTestSuite(function RunTestSuiteTest(t) {
   };
 
 });
+
+runTestSuite(function FailureTest(t) {
+  this.testItDoesNotBubbleUpExceptions = () => {
+    let aSpy = t.spy();
+
+    t.assertNotThrow(() => {
+      runTestSuite(function (t) {
+        this.testFailure = () => {
+          t.assertTrue(false)
+        };
+
+        this.testSomething = aSpy;
+      });
+    });
+    aSpy.assertCalled();
+  }
+});
