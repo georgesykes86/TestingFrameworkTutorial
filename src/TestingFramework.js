@@ -68,24 +68,44 @@ const assertions = {
   },
 };
 
-function runTestSuite(TestSuiteConstructor, options) {
+function runTestSuite(testSuiteConstructor, options) {
   options = options || {};
   const reporter = options.reporter || new SimpleReporter();
-  reporter.reportTestSuite(TestSuiteConstructor.name)
-  const testSuite = new TestSuiteConstructor(assertions);
 
-  Object.keys(testSuite).forEach((methodName) => {
+  const testSuitePrototype = createTestSuite(testSuiteConstructor);
+  reporter.reportTestSuite(
+    getTestSuiteName(testSuiteConstructor, testSuitePrototype)
+  );
+
+  Object.keys(testSuitePrototype).forEach((methodName) => {
     if (methodName.match(/^test/)) {
+      reporter.reportTest(methodName);
+      let testSuite = createTestSuite(testSuiteConstructor);
       testSuite[methodName]();
     }
   });
-
-function SimpleReporter(name) {
-  this.reportTestSuite = (name) => {
-    process.stdout.write(`\n${name}\n`);
-  }
 }
 
+
+function SimpleReporter() {
+  this.reportTestSuite = (name) => {
+    process.stdout.write(`\n${name}\n`);
+  };
+  this.reportTest = (name) => {
+    process.stdout.write(`\t${name}\n`)
+  };
+}
+
+function createTestSuite(TestSuiteConstructor) {
+  return new TestSuiteConstructor(assertions);
+}
+
+function getTestSuiteName(testSuiteConstructor, testSuitePrototype){
+  if (typeof(testSuitePrototype.getTestSuiteName) !== 'function') {
+    return testSuiteConstructor.name;
+  }
+  return testSuitePrototype.getTestSuiteName();
 }
 
 module.exports = runTestSuite;
+module.exports.SimpleReporter = SimpleReporter;

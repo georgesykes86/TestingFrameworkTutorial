@@ -2,7 +2,7 @@ const runTestSuite = require('../src/TestingFramework');
 const ReporterSpy = require('./ReporterSpy');
 
 runTestSuite(function ReporterSpy_BehaviourTest(t) {
-  var reporter = new ReporterSpy(t);
+  let reporter = new ReporterSpy(t);
 
   this.testAssertHasReportedTestSuite_whenFailing = () => {
     t.assertThrow(
@@ -68,6 +68,22 @@ runTestSuite(function ReporterSpy_BehaviourTest(t) {
       reporter.reportTest('testName');
       reporter.reportTest('testOtherName');
       reporter.assertHasReportedTest('testName');
+    });
+  };
+
+  this.testAssertHasReportedTestSuite_whenReporting_andFailing = () => {
+    t.assertThrow(
+      "Expected test 'testName' to be reported", () => {
+      reporter.reportTest('testOtherName');
+      reporter.assertHasReportedTest('testName');
+    });
+  };
+
+  this.testAssertHasReportedTestSuite_whenReporting_andFailingWithDifferentName = () => {
+    t.assertThrow(
+      "Expected test 'testOtherName' to be reported", () => {
+      reporter.reportTest('testName');
+      reporter.assertHasReportedTest('testOtherName');
     });
   };
 });

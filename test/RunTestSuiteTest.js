@@ -30,7 +30,7 @@ runTestSuite(function RunTestSuiteTest(t) {
     t.assertTrue(!aSpy.called);
   };
 
-  this.testItOutputsNameOfTheTest = function () {
+  this.testItOutputsNameOfTheTest = () => {
     runTestSuite(function TestSuiteName(t) {
       this.testSomeTestName = () => {};
       this.testSomeOtherTestName = () => {};
@@ -39,12 +39,32 @@ runTestSuite(function RunTestSuiteTest(t) {
     reporter.assertHasReportedTestSuite('TestSuiteName');
     reporter.assertHasReportedTest('testSomeTestName');
     reporter.assertHasReportedTest('testSomeOtherTestName');
-  }
+  };
 
-  this.testItOutputsNameOfTheTest_withOtherName = function () {
+  this.testItOutputsNameOfTheTest_withOtherName = () => {
     runTestSuite(function OtherTestSuiteName(t) {}, {reporter: reporter});
 
     reporter.assertHasReportedTestSuite('OtherTestSuiteName');
-  }
+  };
+
+  this.testItCanHaveCustomNameOfTheTestSuite = () => {
+    runTestSuite(function (t) {
+      this.getTestSuiteName = () => {
+        return 'CustomNameOfTheTestSuite';
+      };
+    }, {reporter: reporter});
+
+    reporter.assertHasReportedTestSuite('CustomNameOfTheTestSuite');
+  };
+
+  this.testItCanHaveCustomNameOfTheTestSuite_withOtherName = () => {
+    runTestSuite(function (t) {
+      this.getTestSuiteName = () => {
+        return 'OtherCustomNameOfTheTestSuite';
+      };
+    }, {reporter: reporter});
+
+    reporter.assertHasReportedTestSuite('OtherCustomNameOfTheTestSuite');
+  };
 
 });
