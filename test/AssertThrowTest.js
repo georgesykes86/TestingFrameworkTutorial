@@ -1,6 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 
-runTestSuite(function (t) {
+runTestSuite(function AssertThrowTest(t) {
 
   this.testSuccess = () => {
     t.assertThrow('an error message', () => {

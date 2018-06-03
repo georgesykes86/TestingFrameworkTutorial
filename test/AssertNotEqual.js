@@ -1,6 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 
-runTestSuite(function (t) {
+runTestSuite(function AssertNotEqual(t) {
   this.testSuccess = () => {
     t.assertNotThrow(() => {
       t.assertNotEqual(42, 57)

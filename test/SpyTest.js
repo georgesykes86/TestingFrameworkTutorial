@@ -1,6 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 
-runTestSuite(function (t) {
+runTestSuite(function SpyTest(t) {
   this.testIsNotCalledInitially = () => {
     t.spy().assertNotCalled();
   };

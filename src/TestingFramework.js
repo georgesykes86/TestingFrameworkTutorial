@@ -68,7 +68,10 @@ const assertions = {
   },
 };
 
-function runTestSuite(TestSuiteConstructor) {
+function runTestSuite(TestSuiteConstructor, options) {
+  options = options || {};
+  const reporter = options.reporter || new SimpleReporter();
+  reporter.reportTestSuite(TestSuiteConstructor.name)
   const testSuite = new TestSuiteConstructor(assertions);
 
   Object.keys(testSuite).forEach((methodName) => {
@@ -76,6 +79,13 @@ function runTestSuite(TestSuiteConstructor) {
       testSuite[methodName]();
     }
   });
+
+function SimpleReporter(name) {
+  this.reportTestSuite = (name) => {
+    process.stdout.write(`\n${name}\n`);
+  }
+}
+
 }
 
 module.exports = runTestSuite;

@@ -1,6 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 
-runTestSuite(function assertTrueTest(t) {
+runTestSuite(function AssertTrueTest(t) {
   this.testSuccess = () => {
     t.assertTrue(true);
   };

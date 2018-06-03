@@ -1,6 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 
-runTestSuite(function (t) {
+runTestSuite(function AssertEqualsTest(t) {
   this.testSuccess = () => {
     t.assertEqual(42, 42);
   };

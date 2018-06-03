@@ -1,6 +1,8 @@
 const runTestSuite = require('../src/TestingFramework');
+const ReporterSpy = require('./ReporterSpy');
 
-runTestSuite(function (t) {
+runTestSuite(function RunTestSuiteTest(t) {
+  const reporter = new ReporterSpy(t);
 
   this.testItCallsAllTestMethods = () => {
     let spyOne = t.spy();
@@ -29,9 +31,20 @@ runTestSuite(function (t) {
   };
 
   this.testItOutputsNameOfTheTest = function () {
-    runTestSuite(function TestSuiteName(t) {}, {reporter: reporter});
-    t.assertTrue(reporter.hasReportedTestSuite('TestSuiteName'))
+    runTestSuite(function TestSuiteName(t) {
+      this.testSomeTestName = () => {};
+      this.testSomeOtherTestName = () => {};
+    }, {reporter: reporter});
+
     reporter.assertHasReportedTestSuite('TestSuiteName');
+    reporter.assertHasReportedTest('testSomeTestName');
+    reporter.assertHasReportedTest('testSomeOtherTestName');
+  }
+
+  this.testItOutputsNameOfTheTest_withOtherName = function () {
+    runTestSuite(function OtherTestSuiteName(t) {}, {reporter: reporter});
+
+    reporter.assertHasReportedTestSuite('OtherTestSuiteName');
   }
 
 });
