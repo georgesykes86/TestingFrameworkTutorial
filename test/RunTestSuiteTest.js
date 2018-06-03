@@ -1,5 +1,6 @@
 const runTestSuite = require('../src/TestingFramework');
 const ReporterSpy = require('./ReporterSpy');
+const ProcessSpy = require('./ProcessSpy');
 
 runTestSuite(function RunTestSuiteTest(t) {
   const reporter = new ReporterSpy(t);
@@ -70,6 +71,8 @@ runTestSuite(function RunTestSuiteTest(t) {
 });
 
 runTestSuite(function FailureTest(t) {
+  const processSpy = new ProcessSpy();
+
   this.testItDoesNotBubbleUpExceptions = () => {
     let aSpy = t.spy();
 
@@ -80,8 +83,27 @@ runTestSuite(function FailureTest(t) {
         };
 
         this.testSomething = aSpy;
-      });
+      }, { process: processSpy, silenceFailures: true });
     });
     aSpy.assertCalled();
+  };
+
+  this.testExitsWithProcessCodeOne = () => {
+    runTestSuite(function (t) {
+      this.testFailure = () => {
+        t.assertTrue(false);
+      };
+    }, { process: processSpy, silenceFailures: true });
+    t.assertEqual(1, processSpy.hasExitedWithCode);
+  };
+
+  this.testItExitsWithProcessCodeZero_onSuccess = () => {
+    runTestSuite(function (t) {
+      this.testFailure = () => {
+        t.assertTrue(true);
+      };
+    }, { process: processSpy, silenceFailures: true });
+
+    t.assertEqual(0, processSpy.hasExitedWithCode);
   }
 });
